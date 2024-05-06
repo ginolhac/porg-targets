@@ -1,0 +1,6 @@
+/.quarto/
+/_site/
+/*Rproj
+/*_files/
+*.html
+.Rproj.user
