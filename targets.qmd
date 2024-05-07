@@ -153,7 +153,7 @@ Animation code is presented as function, full code in [`_targets_ds1.R`](https:/
 :::
 
 
-# Literate programming
+## Literate programming
 
 We recommend using it [within a target](https://books.ropensci.org/targets/literate-programming.html#literate-programming-within-a-target) and not the [Target Markdown](https://books.ropensci.org/targets/literate-programming.html#target-markdown) that overloads the document.
 
@@ -610,18 +610,38 @@ Thinking at what is a [good `targets`](https://books.ropensci.org/targets/target
 
 :::: {.columns}
 ::: {.column width="50%"}
-### [HPC
+### [HPC](https://books.ropensci.org/targets/crew.html)
 
-TL;DR see [`{crew}`](https://wlandau.github.io/crew/) for autoscaling on workers
+- [`{crew}`](https://wlandau.github.io/crew/) for autoscaling on workers
 
 ![](https://wlandau.github.io/crew/logo.svg){height=150}
 
+``` r
+library(targets)
+library(crew)
+tar_option_set(
+  controller = crew_controller_local(workers = 2)
+)
+```
 
-- and `{crew.cluster}` for job scheduler submission (`sge` or `slurm`)
+``` r
+tar_crew()
+#> # A tibble: 10 × 5
+#>    controller    worker launches seconds targets
+#>    <chr>          <int>    <int>   <dbl>   <int>
+#>  1 my_controller      1        1   103.      104
+#>  2 my_controller      2        1   100.      100
+```
 
-![](https://wlandau.github.io/crew.cluster/logo.svg){height=150}
+
 :::
 ::: {.column width="50%"}
+- `{crew.cluster}` for job scheduler submission
+    + `sge`
+    + `slurm`
+
+![](https://wlandau.github.io/crew.cluster/logo.svg){height=150}
+
 ### [Cloud computing](https://books.ropensci.org/targets/cloud-storage.html)
 
 - AWS
