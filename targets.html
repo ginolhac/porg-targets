@@ -529,9 +529,8 @@ Aurélien Ginolhac
 <p>Animation code is presented as function, full code in <a href="https://gitlab.lcsb.uni.lu/aurelien.ginolhac/targets_demos/-/blob/main/_targets_ds_1.R"><code>_targets_ds1.R</code></a></p>
 </div>
 </section>
-<section>
-<section id="literate-programming" class="title-slide slide level1 center">
-<h1>Literate programming</h1>
+<section id="literate-programming" class="slide level2">
+<h2>Literate programming</h2>
 <p>We recommend using it <a href="https://books.ropensci.org/targets/literate-programming.html#literate-programming-within-a-target">within a target</a> and not the <a href="https://books.ropensci.org/targets/literate-programming.html#target-markdown">Target Markdown</a> that overloads the document.</p>
 <div class="columns">
 <div class="column" style="width:50%;">
@@ -904,14 +903,31 @@ Aurélien Ginolhac
 <h2>Missing parts</h2>
 <div class="columns">
 <div class="column" style="width:50%;">
-<h3 id="hpc">[HPC</h3>
-<p>TL;DR see <a href="https://wlandau.github.io/crew/"><code>{crew}</code></a> for autoscaling on workers</p>
-<p><img data-src="https://wlandau.github.io/crew/logo.svg" height="150"></p>
+<h3 id="hpc"><a href="https://books.ropensci.org/targets/crew.html">HPC</a></h3>
 <ul>
-<li>and <code>{crew.cluster}</code> for job scheduler submission (<code>sge</code> or <code>slurm</code>)</li>
+<li><a href="https://wlandau.github.io/crew/"><code>{crew}</code></a> for autoscaling on workers</li>
+</ul>
+<p><img data-src="https://wlandau.github.io/crew/logo.svg" height="150"></p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href=""></a><span class="fu">library</span>(targets)</span>
+<span id="cb22-2"><a href=""></a><span class="fu">library</span>(crew)</span>
+<span id="cb22-3"><a href=""></a><span class="fu">tar_option_set</span>(</span>
+<span id="cb22-4"><a href=""></a>  <span class="at">controller =</span> <span class="fu">crew_controller_local</span>(<span class="at">workers =</span> <span class="dv">2</span>)</span>
+<span id="cb22-5"><a href=""></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href=""></a><span class="fu">tar_crew</span>()</span>
+<span id="cb23-2"><a href=""></a><span class="co">#&gt; # A tibble: 10 × 5</span></span>
+<span id="cb23-3"><a href=""></a><span class="co">#&gt;    controller    worker launches seconds targets</span></span>
+<span id="cb23-4"><a href=""></a><span class="co">#&gt;    &lt;chr&gt;          &lt;int&gt;    &lt;int&gt;   &lt;dbl&gt;   &lt;int&gt;</span></span>
+<span id="cb23-5"><a href=""></a><span class="co">#&gt;  1 my_controller      1        1   103.      104</span></span>
+<span id="cb23-6"><a href=""></a><span class="co">#&gt;  2 my_controller      2        1   100.      100</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div><div class="column" style="width:50%;">
+<ul>
+<li><code>{crew.cluster}</code> for job scheduler submission
+<ul>
+<li><code>sge</code></li>
+<li><code>slurm</code></li>
+</ul></li>
 </ul>
 <p><img data-src="https://wlandau.github.io/crew.cluster/logo.svg" height="150"></p>
-</div><div class="column" style="width:50%;">
 <h3 id="cloud-computing"><a href="https://books.ropensci.org/targets/cloud-storage.html">Cloud computing</a></h3>
 <ul>
 <li>AWS</li>
@@ -975,7 +991,7 @@ Aurélien Ginolhac
 
 </div>
 </div>
-</section></section>
+</section>
     </div>
   </div>
 
