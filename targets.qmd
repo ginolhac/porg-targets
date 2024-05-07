@@ -600,6 +600,35 @@ Thinking at what is a [good `targets`](https://books.ropensci.org/targets/target
 :::
 
 
+## Data storage
+
+- `rds` is the default, but quite slow
+- `tar_fst_tbl()` from `{tarchetypes}` for **tibbles**
+- `tar_qd()` from `{tarchetypes}` for **lists**
+
+## Missing parts
+
+:::: {.columns}
+::: {.column width="50%"}
+### [HPC
+
+TL;DR see [`{crew}`](https://wlandau.github.io/crew/) for autoscaling on workers
+
+![](https://wlandau.github.io/crew/logo.svg){height=150}
+
+
+- and `{crew.cluster}` for job scheduler submission (`sge` or `slurm`)
+
+![](https://wlandau.github.io/crew.cluster/logo.svg){height=150}
+:::
+::: {.column width="50%"}
+### [Cloud computing](https://books.ropensci.org/targets/cloud-storage.html)
+
+- AWS
+- GCP
+:::
+::::
+
 ## Before we stop
 
 ::::: {.columns}

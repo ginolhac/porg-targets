@@ -5,6 +5,14 @@
 Presented at [PORG](https://porg.digitaltwin.lu/)
 
 
+### Slides
+
+[https://ginolhac.github.io/porg-targets/](https://ginolhac.github.io/porg-targets/) using 
+
+- [r-lib](https://github.com/r-lib/actions)
+- [quarto actions](https://github.com/quarto-dev/quarto-actions)
+
+
 ### Acknowledgments  🙏 👏
 
 - **Eric Koncina** early adopter of `targets`
