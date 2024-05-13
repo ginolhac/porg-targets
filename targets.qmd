@@ -777,8 +777,8 @@ tar_crew()
 
 **William Landau** intro:
 
-- Get started in four minutes: https://vimeo.com/700982360
-- Example project: https://github.com/wlandau/targets-four-minutes
+- Get started in four minutes: [vimeo video](https://vimeo.com/700982360)
+- Example project: [targets-four-minutes](https://github.com/wlandau/targets-four-minutes)
 
 :::
 
