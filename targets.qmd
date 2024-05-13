@@ -64,7 +64,6 @@ dpi: 300
 
 ``` bash
 ├── .git/
-├── run.R
 ├── _targets.R
 ├── _targets/
 ├── Repro.Rproj
@@ -86,7 +85,7 @@ dpi: 300
 - `Rmd`/`qmd` file allows to gather results in a report
 - In a RStudio project
 - Version tracked with `git`
-- An executable `run.sh` allows to use Build Tools in RStudio
+- An executable `run.R` allows to use Build Tools in RStudio
 :::
 ::::
 
