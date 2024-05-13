@@ -428,6 +428,30 @@ others/
 :::
 ::::
 
+
+::: {.footer}
+`tar_map()` is from `{tarchetypes}`
+:::
+
+## Dynamic vs Static
+
+| Dynamic                                |	Static                          |
+|----------------------------------------|----------------------------------|
+|Pipeline creates new targets at runtime.|	All targets defined in advance. |
+| Cryptic target names.                  | Friendly target names.           |
+| Scales to hundreds of branches.        | Does not scale as easily for `tar_visnetwork()` etc.|
+| No metaprogramming required. 	         | Familiarity with metaprogramming is helpful. |
+
+: {.striped}
+
+
+> static branching is most useful for smaller number of heterogeneous targets.
+
+::: {.footer}
+Source: [`targets` manual](https://books.ropensci.org/targets/static.html#branching) by **William Landau**
+:::
+
+
 ## Dynamic within static, best of both worlds
 
 More difficult to write with `tar_map()` (see [example](https://gitlab.lcsb.uni.lu/aurelien.ginolhac/targets_demos/-/blob/main/_targets_ds_3.R))
@@ -514,6 +538,11 @@ list(mapped,
 ```
 :::
 ::::
+
+::: {.footer}
+- `!!!` is the _unquote-splice_ operator from `{rlang}`
+- `tar_combine()` is from `{tarchetypes}`
+:::
 
 ## Manifest
 
