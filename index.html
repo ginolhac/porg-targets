@@ -742,6 +742,48 @@ Aurélien Ginolhac
 <span id="cb16-16"><a href=""></a><span class="ex">└──</span> dset_5.tsv</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
+<div class="footer">
+<p><code>tar_map()</code> is from <code>{tarchetypes}</code></p>
+</div>
+</section>
+<section id="dynamic-vs-static" class="slide level2">
+<h2>Dynamic vs Static</h2>
+<table class="table-striped">
+<colgroup>
+<col style="width: 54%">
+<col style="width: 45%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Dynamic</th>
+<th>Static</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Pipeline creates new targets at runtime.</td>
+<td>All targets defined in advance.</td>
+</tr>
+<tr class="even">
+<td>Cryptic target names.</td>
+<td>Friendly target names.</td>
+</tr>
+<tr class="odd">
+<td>Scales to hundreds of branches.</td>
+<td>Does not scale as easily for <code>tar_visnetwork()</code> etc.</td>
+</tr>
+<tr class="even">
+<td>No metaprogramming required.</td>
+<td>Familiarity with metaprogramming is helpful.</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>static branching is most useful for smaller number of heterogeneous targets.</p>
+</blockquote>
+<div class="footer">
+<p>Source: <a href="https://books.ropensci.org/targets/static.html#branching"><code>targets</code> manual</a> by <strong>William Landau</strong></p>
+</div>
 </section>
 <section id="dynamic-within-static-best-of-both-worlds" class="slide level2">
 <h2>Dynamic within static, best of both worlds</h2>
@@ -818,6 +860,12 @@ Aurélien Ginolhac
 <span id="cb18-21"><a href=""></a>     plot_combined, </span>
 <span id="cb18-22"><a href=""></a>     <span class="fu">tar_quarto</span>(report, <span class="st">"ds3.qmd"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+</div>
+<div class="footer">
+<ul>
+<li><code>!!!</code> is the <em>unquote-splice</em> operator from <code>{rlang}</code></li>
+<li><code>tar_combine()</code> is from <code>{tarchetypes}</code></li>
+</ul>
 </div>
 </section>
 <section id="manifest" class="slide level2">
