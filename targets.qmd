@@ -80,12 +80,12 @@ dpi: 300
 ::: {.column width="70%"}
 ### Targets
 
-- With [`renv`](https://rstudio.github.io/renv/). Snapshot your package environment (and restore! 😌)
+- With [`renv`](https://rstudio.github.io/renv/). Snapshot your package environment
 - `_targets.R` is the only mandatory file
 - Use a `R` sub-folder for functions, gets closer to a `r fontawesome::fa("r-project")` package
 - `Rmd`/`qmd` file allows to gather results in a report
 - In a RStudio project
-- Version tracked with 
+- Version tracked with `git`
 - An executable `run.sh` allows to use Build Tools in RStudio
 :::
 ::::
@@ -171,7 +171,7 @@ We recommend using it [within a target](https://books.ropensci.org/targets/liter
 Like the `targets_demos` repo which has 4 projects
 
 :::: {.columns}
-::: {.column width="50%"}
+::: {.column width="55%"}
 ### Config file: `_targets.yaml`
 
 `targets` needs a R script and a store location
@@ -192,7 +192,7 @@ ds_static:
   reporter_make: verbose_positives # do not display skipped targets
 ```
 :::
-::: {.column width="50%" .fragment}
+::: {.column width="45%" .fragment}
 ### Usage
 
 In your Rmd/qmd/console, one env variable to set:
@@ -511,7 +511,7 @@ mapped <- tar_map(
 ## Combining step
 
 ::::{.columns}
-::: {.column width="70%"}
+::: {.column width="60%"}
 ``` r
 # We want to combined in one tibble the 3 tibble of summary stats
 # Each of one them is actually composed of 2, 4 and 7 tibbles
@@ -536,6 +536,11 @@ list(mapped,
      plot_combined, 
      tar_quarto(report, "ds3.qmd"))
 ```
+:::
+
+::: {.column width="40%"}
+
+![](img/targets_tar_combine.png){fig-align="center"}
 :::
 ::::
 
