@@ -442,7 +442,7 @@ Aurélien Ginolhac
 <li class="fragment"><strong>Dynamic</strong> branching</li>
 <li class="fragment"><strong>Static</strong> branching</li>
 </ul></li>
-<li class="fragment">Run <strong>only</strong> what needs to be executed</li>
+<li class="fragment">Run <strong>only</strong> what needs to be executed and in fresh session with <code>{callr}</code></li>
 <li class="fragment">Embrace <a href="https://books.ropensci.org/targets/literate-programming.html">literate programming</a> with <code>qmd</code> or <code>Rmd</code> docs</li>
 <li class="fragment">Bundle <strong>dependencies</strong> in a documents with <a href="https://docs.ropensci.org/tarchetypes/reference/tar_render.html"><code>tar_render()</code></a>/<a href="https://docs.ropensci.org/tarchetypes/reference/tar_quarto.html"><code>tar_quarto()</code></a></li>
 </ul></li>
@@ -941,11 +941,94 @@ Aurélien Ginolhac
 </section>
 <section id="data-storage" class="slide level2">
 <h2>Data storage</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
 <ul>
 <li><code>rds</code> is the default, but quite slow</li>
-<li><code>tar_fst_tbl()</code> from <code>{tarchetypes}</code> for <strong>tibbles</strong></li>
-<li><code>tar_qd()</code> from <code>{tarchetypes}</code> for <strong>lists</strong></li>
 </ul>
+<div class="callout callout-warning callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Watch out</strong></p>
+</div>
+<div class="callout-content">
+<p>For malicious <strong>promises</strong>!</p>
+</div>
+</div>
+</div>
+<p><img data-src="https://files.mastodon.social/media_attachments/files/112/360/182/948/124/986/original/c5529d407f519690.png"></p>
+<p>Relevant blog post: <a href="https://rud.is/b/2024/05/03/cve-2024-27322-should-never-have-been-assigned-and-r-data-files-are-still-super-risky-even-in-r-4-4-0/">CVE-2024-27322 Should Never Have Been Assigned And R Data Files Are Still Super Risky Even In R 4.4.0</a> by <strong>Bob Rudis</strong></p>
+</div><div class="column fragment" style="width:50%;">
+<p>From <code>{tarchetypes}</code>:</p>
+<ul>
+<li><code>tar_fst_tbl()</code> for <strong>tibbles</strong> (<a href="https://github.com/fstpackage/fst"><code>{fst}</code></a>)</li>
+</ul>
+<p><img data-src="https://raw.githubusercontent.com/fstpackage/fst/develop/man/figures/fst.png" height="120"></p>
+<ul>
+<li><code>tar_qs()</code> for <strong>lists</strong> (Quick serialization of <i class="fa-brands fa-r-project" aria-label="r-project"></i> objects <a href="https://github.com/traversc/qs"><code>{qs}</code></a>)</li>
+</ul>
+</div>
+</div>
+<div class="footer">
+<p>Source: <a href="https://mastodon.social/@klmr/112360501388055184">Konrad Rudolph</a> about CVE-2024-27322</p>
+</div>
+</section>
+<section id="excellent-possibilities-for-debugging" class="slide level2">
+<h2>Excellent possibilities for debugging</h2>
+<div>
+<ul>
+<li class="fragment">Finish the pipeline anyway
+<ul>
+<li class="fragment"><code>tar_option_set(error = "null")</code></li>
+<li class="fragment">Useful for dynamic branching</li>
+</ul></li>
+<li class="fragment">Error messages
+<ul>
+<li class="fragment"><code>tar_meta(fields = error, complete_only = TRUE)</code></li>
+</ul></li>
+<li class="fragment">Save a targets workspace
+<ul>
+<li class="fragment"><code>tar_option_set(workspace_on_error = TRUE)</code></li>
+<li class="fragment">list workspaces: <code>tar_workspaces()</code></li>
+<li class="fragment">load one: <code>tar_workspace(analysis_02de2921)</code> all object, variables are visible interactively</li>
+<li class="fragment">also: <code>tar_traceback(analysis_02de2921)</code></li>
+</ul></li>
+<li class="fragment">Pause the pipeline with the <code>targets debug</code> option.
+<ul>
+<li class="fragment"><code>tar_option_set(debug = "analysis_58_b59aa384")</code></li>
+<li class="fragment">see <a href="https://books.ropensci.org/targets/debugging.html#pause-the-pipeline-with-the-debug-option">example</a></li>
+</ul></li>
+</ul>
+</div>
+<div class="footer">
+<p>Further reading: <a href="https://books.ropensci.org/targets/debugging.html">debugging chapter</a></p>
+</div>
+</section>
+<section id="simplify-the-layers" class="slide level2">
+<h2>Simplify the layers</h2>
+<p>Remember that all code run in a fresh session, so needs to load its package dependencies.</p>
+<p>To avoid it:</p>
+<ul>
+<li><p>Remove <code>{callr}</code>: <code>tar_make(callr_function = NULL)</code></p></li>
+<li><p>Or the opposite, remove <code>{targets}</code>:</p></li>
+</ul>
+<div class="sourceCode" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href=""></a><span class="co"># What about just {callr} without {targets}?</span></span>
+<span id="cb22-2"><a href=""></a>callr<span class="sc">::</span><span class="fu">r</span>( <span class="co"># same error</span></span>
+<span id="cb22-3"><a href=""></a>  <span class="at">func =</span> <span class="cf">function</span>() {</span>
+<span id="cb22-4"><a href=""></a>    <span class="fu">set.seed</span>(<span class="sc">-</span><span class="dv">1012558151</span>) <span class="co"># from tar_meta(name = dataset1, field = seed)</span></span>
+<span id="cb22-5"><a href=""></a>    <span class="fu">library</span>(targets)</span>
+<span id="cb22-6"><a href=""></a>    <span class="fu">suppressMessages</span>(<span class="fu">tar_load_globals</span>())</span>
+<span id="cb22-7"><a href=""></a>    data <span class="ot">&lt;-</span> <span class="fu">simulate_data</span>(<span class="at">units =</span> <span class="dv">100</span>)</span>
+<span id="cb22-8"><a href=""></a>    <span class="fu">analyze_data</span>(data)</span>
+<span id="cb22-9"><a href=""></a>  },</span>
+<span id="cb22-10"><a href=""></a>  <span class="at">show =</span> <span class="cn">TRUE</span></span>
+<span id="cb22-11"><a href=""></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="footer">
+<p>Source: <a href="https://github.com/wlandau/targets-debug">debug repo</a> by <strong>William Landau</strong></p>
+</div>
 </section>
 <section id="missing-parts" class="slide level2">
 <h2>Missing parts</h2>
@@ -956,17 +1039,17 @@ Aurélien Ginolhac
 <li><a href="https://wlandau.github.io/crew/"><code>{crew}</code></a> for autoscaling on workers</li>
 </ul>
 <p><img data-src="https://wlandau.github.io/crew/logo.svg" height="150"></p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href=""></a><span class="fu">library</span>(targets)</span>
-<span id="cb22-2"><a href=""></a><span class="fu">library</span>(crew)</span>
-<span id="cb22-3"><a href=""></a><span class="fu">tar_option_set</span>(</span>
-<span id="cb22-4"><a href=""></a>  <span class="at">controller =</span> <span class="fu">crew_controller_local</span>(<span class="at">workers =</span> <span class="dv">2</span>)</span>
-<span id="cb22-5"><a href=""></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="sourceCode" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href=""></a><span class="fu">tar_crew</span>()</span>
-<span id="cb23-2"><a href=""></a><span class="co">#&gt; # A tibble: 10 × 5</span></span>
-<span id="cb23-3"><a href=""></a><span class="co">#&gt;    controller    worker launches seconds targets</span></span>
-<span id="cb23-4"><a href=""></a><span class="co">#&gt;    &lt;chr&gt;          &lt;int&gt;    &lt;int&gt;   &lt;dbl&gt;   &lt;int&gt;</span></span>
-<span id="cb23-5"><a href=""></a><span class="co">#&gt;  1 my_controller      1        1   103.      104</span></span>
-<span id="cb23-6"><a href=""></a><span class="co">#&gt;  2 my_controller      2        1   100.      100</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href=""></a><span class="fu">library</span>(targets)</span>
+<span id="cb23-2"><a href=""></a><span class="fu">library</span>(crew)</span>
+<span id="cb23-3"><a href=""></a><span class="fu">tar_option_set</span>(</span>
+<span id="cb23-4"><a href=""></a>  <span class="at">controller =</span> <span class="fu">crew_controller_local</span>(<span class="at">workers =</span> <span class="dv">2</span>)</span>
+<span id="cb23-5"><a href=""></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href=""></a><span class="fu">tar_crew</span>()</span>
+<span id="cb24-2"><a href=""></a><span class="co">#&gt; # A tibble: 10 × 5</span></span>
+<span id="cb24-3"><a href=""></a><span class="co">#&gt;    controller    worker launches seconds targets</span></span>
+<span id="cb24-4"><a href=""></a><span class="co">#&gt;    &lt;chr&gt;          &lt;int&gt;    &lt;int&gt;   &lt;dbl&gt;   &lt;int&gt;</span></span>
+<span id="cb24-5"><a href=""></a><span class="co">#&gt;  1 my_controller      1        1   103.      104</span></span>
+<span id="cb24-6"><a href=""></a><span class="co">#&gt;  2 my_controller      2        1   100.      100</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div><div class="column" style="width:50%;">
 <ul>
 <li><code>{crew.cluster}</code> for job scheduler submission
@@ -997,6 +1080,11 @@ Aurélien Ginolhac
 <ul>
 <li><code>targets</code>, dependencies manager, re-run what’s needed</li>
 </ul>
+<p><strong>William Landau</strong> intro:</p>
+<ul>
+<li>Get started in four minutes: https://vimeo.com/700982360</li>
+<li>Example project: https://github.com/wlandau/targets-four-minutes</li>
+</ul>
 </div>
 </div>
 </div>
@@ -1009,9 +1097,9 @@ Aurélien Ginolhac
 <ul>
 <li><a href="https://docs.ropensci.org/targets/">Main website</a></li>
 <li><a href="https://wlandau.github.io/targetopia/packages.html">Targetopia</a> <strong>Landau</strong> universe of targets-derived (stan/jags)</li>
-<li><a href="https://www.youtube.com/watch?v=FODSavXGjYg">Video</a> from R Lille meetup by <strong>William Landau</strong>. June 2021 45’’</li>
 <li><a href="https://www.youtube.com/watch?v=odcBA4ETLn8">Video</a> from Bayes Lund by <strong>William Landau</strong>. October 2021</li>
 <li><a href="https://books.ropensci.org/targets/">Documentation</a> as bookdown by <strong>Landau</strong></li>
+<li><a href="https://books.ropensci.org/targets/debugging.html">Debugging guide</a> by <strong>Landau</strong></li>
 </ul>
 </div>
 </div>
