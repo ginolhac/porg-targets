@@ -43,7 +43,7 @@ dpi: 300
     + Embrace either or combined
         + **Dynamic** branching 
         + **Static** branching 
-    + Run **only** what needs to be executed
+    + Run **only** what needs to be executed and in fresh session with `{callr}`
     + Embrace [literate programming](https://books.ropensci.org/targets/literate-programming.html) with `qmd` or `Rmd` docs
     + Bundle **dependencies** in a documents with [`tar_render()`](https://docs.ropensci.org/tarchetypes/reference/tar_render.html)/[`tar_quarto()`](https://docs.ropensci.org/tarchetypes/reference/tar_quarto.html)
 - Be better at scheduling your work
@@ -631,9 +631,93 @@ Thinking at what is a [good `targets`](https://books.ropensci.org/targets/target
 
 ## Data storage
 
-- `rds` is the default, but quite slow
-- `tar_fst_tbl()` from `{tarchetypes}` for **tibbles**
-- `tar_qd()` from `{tarchetypes}` for **lists**
+:::: {.columns}
+::: {.column width="50%"}
+- `rds` is the default, but quite slow 
+
+::: {.callout-warning}
+## Watch out
+
+For malicious **promises**!
+
+:::
+
+![](https://files.mastodon.social/media_attachments/files/112/360/182/948/124/986/original/c5529d407f519690.png)
+
+
+Relevant blog post: [CVE-2024-27322 Should Never Have Been Assigned And R Data Files Are Still Super Risky Even In R 4.4.0](https://rud.is/b/2024/05/03/cve-2024-27322-should-never-have-been-assigned-and-r-data-files-are-still-super-risky-even-in-r-4-4-0/) by **Bob Rudis**
+
+:::
+::: {.column width="50%" .fragment}
+From `{tarchetypes}`:
+
+- `tar_fst_tbl()` for **tibbles** ([`{fst}`](https://github.com/fstpackage/fst))
+
+![](https://raw.githubusercontent.com/fstpackage/fst/develop/man/figures/fst.png){height=120}
+
+- `tar_qs()` for **lists** (Quick serialization of {{< fa brands r-project >}} objects [`{qs}`](https://github.com/traversc/qs))
+
+:::
+::::
+
+
+::: {.footer}
+Source: [Konrad Rudolph](https://mastodon.social/@klmr/112360501388055184) about CVE-2024-27322
+:::
+
+
+## Excellent possibilities for debugging
+
+
+::: {.incremental}
+- Finish the pipeline anyway
+    + `tar_option_set(error = "null")`
+    + Useful for dynamic branching
+- Error messages
+    + `tar_meta(fields = error, complete_only = TRUE)`
+- Save a targets workspace
+    + `tar_option_set(workspace_on_error = TRUE)`
+    + list workspaces: `tar_workspaces()`
+    + load one: `tar_workspace(analysis_02de2921)` all object, variables are visible interactively
+    + also: `tar_traceback(analysis_02de2921)`
+- Pause the pipeline with the `targets debug` option.
+    + `tar_option_set(debug = "analysis_58_b59aa384")`
+    + see [example](https://books.ropensci.org/targets/debugging.html#pause-the-pipeline-with-the-debug-option)
+
+:::
+
+
+::: {.footer}
+Further reading: [debugging chapter](https://books.ropensci.org/targets/debugging.html)
+:::
+
+## Simplify the layers
+
+Remember that all code run in a fresh session, so needs to load its package dependencies.
+
+To avoid it:
+
+- Remove `{callr}`: `tar_make(callr_function = NULL)`
+
+- Or the opposite, remove `{targets}`:
+
+``` r
+# What about just {callr} without {targets}?
+callr::r( # same error
+  func = function() {
+    set.seed(-1012558151) # from tar_meta(name = dataset1, field = seed)
+    library(targets)
+    suppressMessages(tar_load_globals())
+    data <- simulate_data(units = 100)
+    analyze_data(data)
+  },
+  show = TRUE
+)
+```
+
+::: {.footer}
+Source: [debug repo](https://github.com/wlandau/targets-debug) by **William Landau**
+:::
 
 ## Missing parts
 
@@ -685,18 +769,24 @@ tar_crew()
 :::{.callout-tip icon=false} 
 ## Highlights
 
-* `targets`, dependencies manager, re-run what's needed
+- `targets`, dependencies manager, re-run what's needed
+
+**William Landau** intro:
+
+- Get started in four minutes: https://vimeo.com/700982360
+- Example project: https://github.com/wlandau/targets-four-minutes
 
 :::
 
 
 :::{.callout-tip icon=false} 
 ## Further reading 📚
+
 - [Main website](https://docs.ropensci.org/targets/)
 - [Targetopia](https://wlandau.github.io/targetopia/packages.html) **Landau** universe of targets-derived (stan/jags)
-- [Video](https://www.youtube.com/watch?v=FODSavXGjYg) from R Lille meetup by **William Landau**. June 2021 45''
 - [Video](https://www.youtube.com/watch?v=odcBA4ETLn8) from Bayes Lund by **William Landau**. October 2021
 - [Documentation](https://books.ropensci.org/targets/) as bookdown by **Landau**
+- [Debugging guide](https://books.ropensci.org/targets/debugging.html) by **Landau**
 
 :::
 ::::
