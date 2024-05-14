@@ -482,10 +482,10 @@ Aurélien Ginolhac
 </section>
 <section id="datasaurus-example-smart-animation-caching" class="slide level2">
 <h2>DatasauRus example, smart animation caching</h2>
-<p>This example is available at the <a href="https://gitlab.lcsb.uni.lu/aurelien.ginolhac/targets_demos"><code>target_demos</code> repo</a></p>
+<p>This example is available at the <a href="https://github.com/ginolhac/targets-demos"><code>target_demos</code> repo</a></p>
 <div class="columns">
 <div class="column" style="width:50%;">
-<h4 id="targets-script-_targets_ds_fun1.r">targets script <a href="https://gitlab.lcsb.uni.lu/aurelien.ginolhac/targets_demos/-/blob/main/_targets_ds_fun1.R"><code>_targets_ds_fun1.R</code></a></h4>
+<h4 id="targets-script-_targets_ds_fun1.r">targets script <a href="https://github.com/ginolhac/targets-demos/blob/main/_targets_ds_fun1.R"><code>_targets_ds_fun1.R</code></a></h4>
 <div class="sourceCode" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href=""></a><span class="fu">library</span>(targets)</span>
 <span id="cb2-2"><a href=""></a><span class="fu">library</span>(tarchetypes)</span>
 <span id="cb2-3"><a href=""></a><span class="fu">source</span>(<span class="st">"R/plotting.R"</span>)</span>
@@ -525,7 +525,7 @@ Aurélien Ginolhac
 </div>
 </div>
 <div class="footer">
-<p>Animation code is presented as function, full code in <a href="https://gitlab.lcsb.uni.lu/aurelien.ginolhac/targets_demos/-/blob/main/_targets_ds_1.R"><code>_targets_ds1.R</code></a></p>
+<p>Animation code is presented as function, full code in <a href="https://github.com/ginolhac/targets-demos/blob/main/_targets_ds_1.R"><code>_targets_ds_1.R</code></a></p>
 </div>
 </section>
 <section id="literate-programming" class="slide level2">
@@ -799,7 +799,7 @@ Aurélien Ginolhac
 </section>
 <section id="dynamic-within-static-best-of-both-worlds" class="slide level2">
 <h2>Dynamic within static, best of both worlds</h2>
-<p>More difficult to write with <code>tar_map()</code> (see <a href="https://gitlab.lcsb.uni.lu/aurelien.ginolhac/targets_demos/-/blob/main/_targets_ds_3.R">example</a>)</p>
+<p>More difficult to write with <code>tar_map()</code> (see <a href="https://github.com/ginolhac/targets-demos/blob/main/_targets_ds_3.R">example</a>)</p>
 <p>But meaningful names and combine when needed:</p>
 
 <img data-src="img/targets_dag_static.png" class="quarto-figure quarto-figure-center r-stretch"><p>Use <code>tar_manifest()</code> to display exactly the command to be run</p>
@@ -811,7 +811,7 @@ Aurélien Ginolhac
 <h2>Parallel static branches and combine</h2>
 <div class="columns">
 <div class="column" style="width:70%;">
-<h4 id="from-_targets_ds_3.r-static-branches">From <a href="https://gitlab.lcsb.uni.lu/aurelien.ginolhac/targets_demos/-/blob/main/_targets_ds_3.R"><code>_targets_ds_3.R</code></a>, static branches:</h4>
+<h4 id="from-_targets_ds_3.r-static-branches">From <a href="https://github.com/ginolhac/targets-demos/blob/main/_targets_ds_3.R"><code>_targets_ds_3.R</code></a>, static branches:</h4>
 <div class="sourceCode" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href=""></a><span class="co"># Static branching with dynamic branching inside</span></span>
 <span id="cb17-2"><a href=""></a>values <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
 <span id="cb17-3"><a href=""></a>  <span class="at">folders =</span> <span class="fu">c</span>(<span class="st">"lines"</span>, <span class="st">"circles"</span>, <span class="st">"others"</span>)</span>
@@ -888,7 +888,7 @@ Aurélien Ginolhac
 </section>
 <section id="manifest" class="slide level2">
 <h2>Manifest</h2>
-<h4 id="tar_manifest-paged-version-in-ds3.qmd"><code>tar_manifest()</code> (paged version in <a href="https://gitlab.lcsb.uni.lu/aurelien.ginolhac/targets_demos/-/blob/main/ds3.qmd"><code>ds3.qmd</code></a>)</h4>
+<h4 id="tar_manifest-paged-version-in-ds3.qmd"><code>tar_manifest()</code> (paged version in <a href="https://github.com/ginolhac/targets-demos/blob/main/ds3.qmd"><code>ds3.qmd</code></a>)</h4>
 <div class="sourceCode" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href=""></a><span class="co"># A tibble: 21 × 4</span></span>
 <span id="cb19-2"><a href=""></a>   name                 command                                                                pattern description</span>
 <span id="cb19-3"><a href=""></a>   <span class="sc">&lt;</span>chr<span class="sc">&gt;</span>                <span class="er">&lt;</span>chr<span class="sc">&gt;</span>                                                                  <span class="er">&lt;</span>chr<span class="sc">&gt;</span>   <span class="er">&lt;</span>chr<span class="sc">&gt;</span>      </span>
