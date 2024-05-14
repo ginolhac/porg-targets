@@ -19,6 +19,10 @@ Rendered via Continuous Integration GHA with:
 - [Quarto actions](https://github.com/quarto-dev/quarto-actions)
 
 
+### Companion demo repo using DatasauRus
+
+- [targets-demos](https://github.com/ginolhac/targets-demos)
+
 ### Acknowledgments  🙏 👏
 
 - **Eric Koncina** early adopter of `targets`

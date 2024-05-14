@@ -91,12 +91,12 @@ dpi: 300
 
 ## DatasauRus example, smart animation caching
 
-This example is available at the [`target_demos` repo](https://gitlab.lcsb.uni.lu/aurelien.ginolhac/targets_demos)
+This example is available at the [`target_demos` repo](https://github.com/ginolhac/targets-demos)
 
 
 :::: {.columns}
 ::: {.column width="50%"}
-#### targets script [`_targets_ds_fun1.R`](https://gitlab.lcsb.uni.lu/aurelien.ginolhac/targets_demos/-/blob/main/_targets_ds_fun1.R)
+#### targets script [`_targets_ds_fun1.R`](https://github.com/ginolhac/targets-demos/blob/main/_targets_ds_fun1.R)
 
 ``` r
 library(targets)
@@ -148,7 +148,7 @@ list(
 
 
 ::: {.footer}
-Animation code is presented as function, full code in [`_targets_ds1.R`](https://gitlab.lcsb.uni.lu/aurelien.ginolhac/targets_demos/-/blob/main/_targets_ds_1.R)
+Animation code is presented as function, full code in [`_targets_ds_1.R`](https://github.com/ginolhac/targets-demos/blob/main/_targets_ds_1.R)
 :::
 
 
@@ -460,7 +460,7 @@ Source: [`targets` manual](https://books.ropensci.org/targets/static.html#branch
 
 ## Dynamic within static, best of both worlds
 
-More difficult to write with `tar_map()` (see [example](https://gitlab.lcsb.uni.lu/aurelien.ginolhac/targets_demos/-/blob/main/_targets_ds_3.R))
+More difficult to write with `tar_map()` (see [example](https://github.com/ginolhac/targets-demos/blob/main/_targets_ds_3.R))
 
 But meaningful names and combine when needed:
 
@@ -477,7 +477,7 @@ Command used `tar_visnetwork(label = c("description", "branches"))`
 
 :::: {.columns}
 ::: {.column width="70%"}
-#### From [`_targets_ds_3.R`](https://gitlab.lcsb.uni.lu/aurelien.ginolhac/targets_demos/-/blob/main/_targets_ds_3.R), static branches:
+#### From [`_targets_ds_3.R`](https://github.com/ginolhac/targets-demos/blob/main/_targets_ds_3.R), static branches:
 
 ``` r
 # Static branching with dynamic branching inside
@@ -557,7 +557,7 @@ list(mapped,
 
 ## Manifest
 
-#### `tar_manifest()` (paged version in [`ds3.qmd`](https://gitlab.lcsb.uni.lu/aurelien.ginolhac/targets_demos/-/blob/main/ds3.qmd))
+#### `tar_manifest()` (paged version in [`ds3.qmd`](https://github.com/ginolhac/targets-demos/blob/main/ds3.qmd))
 
 ``` r
 # A tibble: 21 × 4
