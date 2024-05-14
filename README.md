@@ -1,16 +1,22 @@
-## {targets} presentation
+## {targets} introduction
 
-`targets`, dependencies manager for **R**, re-run what's needed
+`{targets}`, a dependencies manager for **R**, re-run what's needed
 
 Presented at [PORG](https://porg.digitaltwin.lu/)
 
 
+
 ### Slides
 
-[https://ginolhac.github.io/porg-targets/](https://ginolhac.github.io/porg-targets/) using 
+[https://ginolhac.github.io/porg-targets/](https://ginolhac.github.io/porg-targets/) using:
+
+- [Quarto revealjs](https://quarto.org/docs/presentations/revealjs/)
+- [Unilu-theme](https://github.com/ginolhac/unilu-theme) my quarto extension
+
+Rendered via Continuous Integration GHA with:
 
 - [r-lib](https://github.com/r-lib/actions)
-- [quarto actions](https://github.com/quarto-dev/quarto-actions)
+- [Quarto actions](https://github.com/quarto-dev/quarto-actions)
 
 
 ### Acknowledgments  🙏 👏
@@ -20,6 +26,11 @@ Presented at [PORG](https://porg.digitaltwin.lu/)
 
 
 ### Further reading 📚
+
+**William Landau** own intro to `{targets}`:
+
+- Get started in four minutes: [vimeo video](https://vimeo.com/700982360)
+- Example project: [targets-four-minutes](https://github.com/wlandau/targets-four-minutes)
 
 - [Main website](https://docs.ropensci.org/targets/)
 - [Targetopia](https://wlandau.github.io/targetopia/packages.html) **Landau** universe of targets-derived (stan/jags)

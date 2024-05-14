@@ -228,6 +228,13 @@ targets::tar_make()
 ![](img/targets_fun_ds1_run.png)
 
 - Animation takes the most time
+
+::: {.callout-warning}
+## Issue on Windows
+
+Seems that a custom script is not working on {{< fa brands windows >}}
+:::
+
 :::
 ::::
 
