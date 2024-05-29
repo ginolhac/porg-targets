@@ -422,7 +422,7 @@ Aurélien Ginolhac
     </div>
 </div>
 
-  <p class="date">Monday, the 13<sup style="font-size:65%;font-style:italic;">th</sup> of May, 2024</p>
+  <p class="date">Wednesday, the 29<sup style="font-size:65%;font-style:italic;">th</sup> of May, 2024</p>
 </section>
 <section id="targets-and-companion-package-tarchetypes" class="slide level2">
 <h2>{targets} and companion package tarchetypes</h2>
@@ -762,8 +762,8 @@ Aurélien Ginolhac
 <h2>Dynamic vs Static</h2>
 <table class="table-striped">
 <colgroup>
-<col style="width: 54%">
-<col style="width: 45%">
+<col style="width: 44%">
+<col style="width: 55%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -938,6 +938,110 @@ Aurélien Ginolhac
 </div>
 </div>
 </section>
+<section id="static-in-static" class="slide level2">
+<h2>Static-in-static</h2>
+<p>Dynamic branches still have cryptic names. What is we want to go <strong>full static</strong> where all steps are known upfront.</p>
+<div class="fragment">
+<div class="columns">
+<div class="column" style="width:65%;">
+<p>Nested <code>tar_map()</code>: toy example:</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href=""></a><span class="fu">library</span>(targets)</span>
+<span id="cb22-2"><a href=""></a><span class="fu">library</span>(tarchetypes)</span>
+<span id="cb22-3"><a href=""></a>mapped <span class="ot">&lt;-</span> <span class="fu">tar_map</span>(</span>
+<span id="cb22-4"><a href=""></a>  <span class="co">#unlist = FALSE, # Return a nested list from tar_map()</span></span>
+<span id="cb22-5"><a href=""></a>  <span class="at">values =</span> <span class="fu">list</span>(<span class="at">model =</span> <span class="fu">c</span>(<span class="st">"mod_1"</span>, <span class="st">"mod_2"</span>)),</span>
+<span id="cb22-6"><a href=""></a>  <span class="fu">tar_target</span>(</span>
+<span id="cb22-7"><a href=""></a>    distrib,</span>
+<span id="cb22-8"><a href=""></a>    <span class="fu">tar_name</span>(),</span>
+<span id="cb22-9"><a href=""></a>  ),</span>
+<span id="cb22-10"><a href=""></a>  <span class="co"># static in static</span></span>
+<span id="cb22-11"><a href=""></a>  <span class="fu">tar_map</span>(</span>
+<span id="cb22-12"><a href=""></a>    <span class="at">values =</span> <span class="fu">list</span>(<span class="at">sim =</span> <span class="fu">c</span>(<span class="st">"A"</span>, <span class="st">"B"</span>)),</span>
+<span id="cb22-13"><a href=""></a>    <span class="fu">tar_target</span>(</span>
+<span id="cb22-14"><a href=""></a>      estim,</span>
+<span id="cb22-15"><a href=""></a>      <span class="fu">paste</span>(distrib, <span class="fu">tar_name</span>()),</span>
+<span id="cb22-16"><a href=""></a>    )</span>
+<span id="cb22-17"><a href=""></a>  )</span>
+<span id="cb22-18"><a href=""></a>)</span>
+<span id="cb22-19"><a href=""></a>combined <span class="ot">&lt;-</span> <span class="fu">tar_combine</span>(combi, </span>
+<span id="cb22-20"><a href=""></a>                        <span class="co"># select all estimations</span></span>
+<span id="cb22-21"><a href=""></a>                        <span class="fu">tar_select_targets</span>(mapped, <span class="fu">starts_with</span>(<span class="st">"estim"</span>)), </span>
+<span id="cb22-22"><a href=""></a>                        <span class="at">command =</span> <span class="fu">paste</span>(<span class="sc">!!!</span>.x))</span>
+<span id="cb22-23"><a href=""></a><span class="fu">list</span>(mapped, combined)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div><div class="column fragment" style="width:35%;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="img/targets_full_static.png" class="quarto-figure quarto-figure-center"></p>
+</figure>
+</div>
+<p>No more square <code>targets</code>, no <code>pattern = map(...)</code></p>
+</div>
+</div>
+</div>
+</section>
+<section id="full-static-for-datasaurus-_targets_ds_4.r" class="slide level2">
+<h2>Full static for datasauRus, <code>_targets_ds_4.R</code></h2>
+<div class="sourceCode" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href=""></a>mapped <span class="ot">&lt;-</span> <span class="fu">tar_map</span>(</span>
+<span id="cb23-2"><a href=""></a>  <span class="at">values =</span> values,</span>
+<span id="cb23-3"><a href=""></a>  <span class="at">names =</span> <span class="st">"names"</span>, <span class="co"># to avoid targets reporting "files_data.lines"</span></span>
+<span id="cb23-4"><a href=""></a>  <span class="co"># special pair of targets</span></span>
+<span id="cb23-5"><a href=""></a>  <span class="co"># readr is in charge of the aggregation (bind_rows())</span></span>
+<span id="cb23-6"><a href=""></a>  <span class="fu">tar_file_read</span>(files, fs<span class="sc">::</span><span class="fu">dir_ls</span>(folders, <span class="at">glob =</span> <span class="st">"*tsv"</span>), <span class="fu">read_tsv</span>(<span class="at">file =</span> <span class="sc">!!</span>.x, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>)),</span>
+<span id="cb23-7"><a href=""></a>  <span class="co"># nested tar_map</span></span>
+<span id="cb23-8"><a href=""></a>  <span class="fu">tar_map</span>(</span>
+<span id="cb23-9"><a href=""></a>    <span class="at">values =</span> <span class="fu">list</span>(<span class="at">funs =</span> <span class="fu">c</span>(<span class="st">"mean"</span>, <span class="st">"sd"</span>)),</span>
+<span id="cb23-10"><a href=""></a>    <span class="fu">tar_target</span>(summary, <span class="fu">summarise</span>(files, <span class="at">x_sum =</span> <span class="fu">funs</span>(x), <span class="at">y_sum =</span> <span class="fu">funs</span>(y)))</span>
+<span id="cb23-11"><a href=""></a>  )</span>
+<span id="cb23-12"><a href=""></a>)</span>
+<span id="cb23-13"><a href=""></a>mcombined <span class="ot">&lt;-</span> <span class="fu">tar_combine</span>(mean_combine, </span>
+<span id="cb23-14"><a href=""></a>                         <span class="co"># tarchetypes helper to select all averages </span></span>
+<span id="cb23-15"><a href=""></a>                         <span class="fu">tar_select_targets</span>(mapped, <span class="fu">contains</span>(<span class="st">"_mean_"</span>)),</span>
+<span id="cb23-16"><a href=""></a>                         <span class="co"># .x placeholder all matching targets</span></span>
+<span id="cb23-17"><a href=""></a>                         <span class="co"># !!! unquote-splice operator</span></span>
+<span id="cb23-18"><a href=""></a>                         <span class="at">command =</span> <span class="fu">bind_rows</span>(<span class="sc">!!!</span>.x, <span class="at">.id =</span> <span class="st">"set"</span>))</span>
+<span id="cb23-19"><a href=""></a></span>
+<span id="cb23-20"><a href=""></a>scombined <span class="ot">&lt;-</span> <span class="fu">tar_combine</span>(sd_combine, </span>
+<span id="cb23-21"><a href=""></a>                         <span class="co"># tarchetypes helper to select all averages </span></span>
+<span id="cb23-22"><a href=""></a>                         <span class="fu">tar_select_targets</span>(mapped, <span class="fu">contains</span>(<span class="st">"_sd_"</span>)),</span>
+<span id="cb23-23"><a href=""></a>                         <span class="co"># .x placeholder all matching targets</span></span>
+<span id="cb23-24"><a href=""></a>                         <span class="co"># !!! unquote-splice operator</span></span>
+<span id="cb23-25"><a href=""></a>                         <span class="at">command =</span> <span class="fu">bind_rows</span>(<span class="sc">!!!</span>.x, <span class="at">.id =</span> <span class="st">"set"</span>))</span>
+<span id="cb23-26"><a href=""></a></span>
+<span id="cb23-27"><a href=""></a>combi <span class="ot">&lt;-</span> <span class="fu">tar_combine</span>(stats, mcombined, scombined)</span>
+<span id="cb23-28"><a href=""></a></span>
+<span id="cb23-29"><a href=""></a><span class="fu">list</span>(mapped, mcombined, scombined, combi)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="corresponding-dag" class="slide level2">
+<h2>Corresponding DAG</h2>
+<div class="columns">
+<div class="column" style="width:65%;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="img/targets_ds_full_static.png" class="quarto-figure quarto-figure-center"></p>
+</figure>
+</div>
+</div><div class="column fragment" style="width:35%;">
+<div class="sourceCode" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href=""></a><span class="sc">&gt;</span> <span class="fu">tar_read</span>(mean_combine)</span>
+<span id="cb24-2"><a href=""></a><span class="co"># A tibble: 3 × 3</span></span>
+<span id="cb24-3"><a href=""></a>  set                  x_sum y_sum</span>
+<span id="cb24-4"><a href=""></a>  <span class="sc">&lt;</span>chr<span class="sc">&gt;</span>                <span class="er">&lt;</span>dbl<span class="sc">&gt;</span> <span class="er">&lt;</span>dbl<span class="sc">&gt;</span></span>
+<span id="cb24-5"><a href=""></a><span class="dv">1</span> summary_mean_circles  <span class="fl">54.3</span>  <span class="fl">47.8</span></span>
+<span id="cb24-6"><a href=""></a><span class="dv">2</span> summary_mean_lines    <span class="fl">54.3</span>  <span class="fl">47.8</span></span>
+<span id="cb24-7"><a href=""></a><span class="dv">3</span> summary_mean_others   <span class="fl">54.3</span>  <span class="fl">47.8</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>And final <code>stat</code> object:</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href=""></a><span class="sc">&gt;</span> <span class="fu">tar_read</span>(stats)</span>
+<span id="cb25-2"><a href=""></a><span class="co"># A tibble: 6 × 3</span></span>
+<span id="cb25-3"><a href=""></a>  set                  x_sum y_sum</span>
+<span id="cb25-4"><a href=""></a>  <span class="sc">&lt;</span>chr<span class="sc">&gt;</span>                <span class="er">&lt;</span>dbl<span class="sc">&gt;</span> <span class="er">&lt;</span>dbl<span class="sc">&gt;</span></span>
+<span id="cb25-5"><a href=""></a><span class="dv">1</span> summary_mean_circles  <span class="fl">54.3</span>  <span class="fl">47.8</span></span>
+<span id="cb25-6"><a href=""></a><span class="dv">2</span> summary_mean_lines    <span class="fl">54.3</span>  <span class="fl">47.8</span></span>
+<span id="cb25-7"><a href=""></a><span class="dv">3</span> summary_mean_others   <span class="fl">54.3</span>  <span class="fl">47.8</span></span>
+<span id="cb25-8"><a href=""></a><span class="dv">4</span> summary_sd_circles    <span class="fl">16.7</span>  <span class="fl">26.9</span></span>
+<span id="cb25-9"><a href=""></a><span class="dv">5</span> summary_sd_lines      <span class="fl">16.7</span>  <span class="fl">26.9</span></span>
+<span id="cb25-10"><a href=""></a><span class="dv">6</span> summary_sd_others     <span class="fl">16.7</span>  <span class="fl">26.9</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
 <section id="better-project-design" class="slide level2">
 <h2>Better project design</h2>
 <p>Thinking at what is a <a href="https://books.ropensci.org/targets/targets.html#what-a-target-should-do">good <code>targets</code></a> helps tremendously the coding</p>
@@ -957,13 +1061,10 @@ Aurélien Ginolhac
 <p>— <em>William Landau</em></p>
 </div>
 </section>
-<section id="data-storage" class="slide level2">
-<h2>Data storage</h2>
+<section id="data-storage-rds-is-the-default-but-quite-slow" class="slide level2">
+<h2>Data storage, <code>rds</code> is the default, but quite slow</h2>
 <div class="columns">
 <div class="column" style="width:50%;">
-<ul>
-<li><code>rds</code> is the default, but quite slow</li>
-</ul>
 <div class="callout callout-warning callout-titled callout-style-default">
 <div class="callout-body">
 <div class="callout-title">
@@ -977,7 +1078,7 @@ Aurélien Ginolhac
 </div>
 </div>
 </div>
-<p><img data-src="https://files.mastodon.social/media_attachments/files/112/360/182/948/124/986/original/c5529d407f519690.png"></p>
+<p><img data-src="https://files.mastodon.social/media_attachments/files/112/360/182/948/124/986/original/c5529d407f519690.png" height="400"></p>
 <p>Relevant blog post: <a href="https://rud.is/b/2024/05/03/cve-2024-27322-should-never-have-been-assigned-and-r-data-files-are-still-super-risky-even-in-r-4-4-0/">CVE-2024-27322 Should Never Have Been Assigned And R Data Files Are Still Super Risky Even In R 4.4.0</a> by <strong>Bob Rudis</strong></p>
 </div><div class="column fragment" style="width:50%;">
 <p>From <code>{tarchetypes}</code>:</p>
@@ -994,7 +1095,7 @@ Aurélien Ginolhac
 <p>Source: <a href="https://mastodon.social/@klmr/112360501388055184">Konrad Rudolph</a> about CVE-2024-27322</p>
 </div>
 </section>
-<section id="excellent-possibilities-for-debugging" class="slide level2">
+<section id="excellent-possibilities-for-debugging" class="slide level2 smaller">
 <h2>Excellent possibilities for debugging</h2>
 <div>
 <ul>
@@ -1033,17 +1134,17 @@ Aurélien Ginolhac
 <li><p>Remove <code>{callr}</code>: <code>tar_make(callr_function = NULL)</code></p></li>
 <li><p>Or the opposite, remove <code>{targets}</code>:</p></li>
 </ul>
-<div class="sourceCode" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href=""></a><span class="co"># What about just {callr} without {targets}?</span></span>
-<span id="cb22-2"><a href=""></a>callr<span class="sc">::</span><span class="fu">r</span>( <span class="co"># same error</span></span>
-<span id="cb22-3"><a href=""></a>  <span class="at">func =</span> <span class="cf">function</span>() {</span>
-<span id="cb22-4"><a href=""></a>    <span class="fu">set.seed</span>(<span class="sc">-</span><span class="dv">1012558151</span>) <span class="co"># from tar_meta(name = dataset1, field = seed)</span></span>
-<span id="cb22-5"><a href=""></a>    <span class="fu">library</span>(targets)</span>
-<span id="cb22-6"><a href=""></a>    <span class="fu">suppressMessages</span>(<span class="fu">tar_load_globals</span>())</span>
-<span id="cb22-7"><a href=""></a>    data <span class="ot">&lt;-</span> <span class="fu">simulate_data</span>(<span class="at">units =</span> <span class="dv">100</span>)</span>
-<span id="cb22-8"><a href=""></a>    <span class="fu">analyze_data</span>(data)</span>
-<span id="cb22-9"><a href=""></a>  },</span>
-<span id="cb22-10"><a href=""></a>  <span class="at">show =</span> <span class="cn">TRUE</span></span>
-<span id="cb22-11"><a href=""></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href=""></a><span class="co"># What about just {callr} without {targets}?</span></span>
+<span id="cb26-2"><a href=""></a>callr<span class="sc">::</span><span class="fu">r</span>( <span class="co"># same error</span></span>
+<span id="cb26-3"><a href=""></a>  <span class="at">func =</span> <span class="cf">function</span>() {</span>
+<span id="cb26-4"><a href=""></a>    <span class="fu">set.seed</span>(<span class="sc">-</span><span class="dv">1012558151</span>) <span class="co"># from tar_meta(name = dataset1, field = seed)</span></span>
+<span id="cb26-5"><a href=""></a>    <span class="fu">library</span>(targets)</span>
+<span id="cb26-6"><a href=""></a>    <span class="fu">suppressMessages</span>(<span class="fu">tar_load_globals</span>())</span>
+<span id="cb26-7"><a href=""></a>    data <span class="ot">&lt;-</span> <span class="fu">simulate_data</span>(<span class="at">units =</span> <span class="dv">100</span>)</span>
+<span id="cb26-8"><a href=""></a>    <span class="fu">analyze_data</span>(data)</span>
+<span id="cb26-9"><a href=""></a>  },</span>
+<span id="cb26-10"><a href=""></a>  <span class="at">show =</span> <span class="cn">TRUE</span></span>
+<span id="cb26-11"><a href=""></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="footer">
 <p>Source: <a href="https://github.com/wlandau/targets-debug">debug repo</a> by <strong>William Landau</strong></p>
 </div>
@@ -1057,17 +1158,17 @@ Aurélien Ginolhac
 <li><a href="https://wlandau.github.io/crew/"><code>{crew}</code></a> for autoscaling on workers</li>
 </ul>
 <p><img data-src="https://wlandau.github.io/crew/logo.svg" height="150"></p>
-<div class="sourceCode" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href=""></a><span class="fu">library</span>(targets)</span>
-<span id="cb23-2"><a href=""></a><span class="fu">library</span>(crew)</span>
-<span id="cb23-3"><a href=""></a><span class="fu">tar_option_set</span>(</span>
-<span id="cb23-4"><a href=""></a>  <span class="at">controller =</span> <span class="fu">crew_controller_local</span>(<span class="at">workers =</span> <span class="dv">2</span>)</span>
-<span id="cb23-5"><a href=""></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="sourceCode" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href=""></a><span class="fu">tar_crew</span>()</span>
-<span id="cb24-2"><a href=""></a><span class="co">#&gt; # A tibble: 10 × 5</span></span>
-<span id="cb24-3"><a href=""></a><span class="co">#&gt;    controller    worker launches seconds targets</span></span>
-<span id="cb24-4"><a href=""></a><span class="co">#&gt;    &lt;chr&gt;          &lt;int&gt;    &lt;int&gt;   &lt;dbl&gt;   &lt;int&gt;</span></span>
-<span id="cb24-5"><a href=""></a><span class="co">#&gt;  1 my_controller      1        1   103.      104</span></span>
-<span id="cb24-6"><a href=""></a><span class="co">#&gt;  2 my_controller      2        1   100.      100</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href=""></a><span class="fu">library</span>(targets)</span>
+<span id="cb27-2"><a href=""></a><span class="fu">library</span>(crew)</span>
+<span id="cb27-3"><a href=""></a><span class="fu">tar_option_set</span>(</span>
+<span id="cb27-4"><a href=""></a>  <span class="at">controller =</span> <span class="fu">crew_controller_local</span>(<span class="at">workers =</span> <span class="dv">2</span>)</span>
+<span id="cb27-5"><a href=""></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href=""></a><span class="fu">tar_crew</span>()</span>
+<span id="cb28-2"><a href=""></a><span class="co">#&gt; # A tibble: 10 × 5</span></span>
+<span id="cb28-3"><a href=""></a><span class="co">#&gt;    controller    worker launches seconds targets</span></span>
+<span id="cb28-4"><a href=""></a><span class="co">#&gt;    &lt;chr&gt;          &lt;int&gt;    &lt;int&gt;   &lt;dbl&gt;   &lt;int&gt;</span></span>
+<span id="cb28-5"><a href=""></a><span class="co">#&gt;  1 my_controller      1        1   103.      104</span></span>
+<span id="cb28-6"><a href=""></a><span class="co">#&gt;  2 my_controller      2        1   100.      100</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div><div class="column" style="width:50%;">
 <ul>
 <li><code>{crew.cluster}</code> for job scheduler submission
