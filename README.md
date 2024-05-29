@@ -11,7 +11,7 @@ Presented at [PORG](https://porg.digitaltwin.lu/)
 [https://ginolhac.github.io/porg-targets/](https://ginolhac.github.io/porg-targets/) using:
 
 - [Quarto revealjs](https://quarto.org/docs/presentations/revealjs/)
-- [Unilu-theme](https://github.com/ginolhac/unilu-theme) my quarto extension
+- [Unilu-theme](https://github.com/ginolhac/unilu-theme) my quarto extension for styling the slides
 
 Rendered via Continuous Integration GHA with:
 

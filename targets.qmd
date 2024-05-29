@@ -1,7 +1,7 @@
 ---
 title: "A workflow manager for {{< fa brands r-project >}}"
 subtitle: "`targets`"
-date: "2024-05-13T14:00"
+date: today
 date-format: "dddd, [the] D[<sup style='font-size:65%;font-style:italic;'>th</sup>] [of] MMMM, YYYY"
 institute: "University of Luxembourg"
 author: "Aurélien Ginolhac"
@@ -441,12 +441,12 @@ others/
 
 ## Dynamic vs Static
 
-| Dynamic                                |	Static                          |
-|----------------------------------------|----------------------------------|
-|Pipeline creates new targets at runtime.|	All targets defined in advance. |
-| Cryptic target names.                  | Friendly target names.           |
-| Scales to hundreds of branches.        | Does not scale as easily for `tar_visnetwork()` etc.|
-| No metaprogramming required. 	         | Familiarity with metaprogramming is helpful. |
+| Dynamic                                  |	Static                                             |
+|------------------------------------------|-----------------------------------------------------|
+| Pipeline creates new targets at runtime. | All targets defined in advance.                     |
+| Cryptic target names.                    | Friendly target names.                              |
+| Scales to hundreds of branches.          | Does not scale as easily for `tar_visnetwork()` etc.|
+| No metaprogramming required. 	           | Familiarity with metaprogramming is helpful.        |
 
 : {.striped}
 
@@ -621,6 +621,120 @@ tar_manifest(names = tar_described_as(starts_with("survival model")))
 From `{target}` version 1.6.0
 :::
 
+## Static-in-static
+
+Dynamic branches still have cryptic names. What is we want to go **full static** where all steps are known upfront.
+
+. . .
+
+:::: {.columns}
+::: {.column width="65%"}
+Nested `tar_map()`: toy example:
+
+``` r
+library(targets)
+library(tarchetypes)
+mapped <- tar_map(
+  #unlist = FALSE, # Return a nested list from tar_map()
+  values = list(model = c("mod_1", "mod_2")),
+  tar_target(
+    distrib,
+    tar_name(),
+  ),
+  # static in static
+  tar_map(
+    values = list(sim = c("A", "B")),
+    tar_target(
+      estim,
+      paste(distrib, tar_name()),
+    )
+  )
+)
+combined <- tar_combine(combi, 
+                        # select all estimations
+                        tar_select_targets(mapped, starts_with("estim")), 
+                        command = paste(!!!.x))
+list(mapped, combined)
+
+```
+:::
+::: {.column width="35%" .fragment}
+![](img/targets_full_static.png){fig-align="center"}
+
+No more square `targets`, no `pattern = map(...)`
+:::
+::::
+
+
+## Full static for datasauRus, `_targets_ds_4.R`
+
+
+```{.r}
+mapped <- tar_map(
+  values = values,
+  names = "names", # to avoid targets reporting "files_data.lines"
+  # special pair of targets
+  # readr is in charge of the aggregation (bind_rows())
+  tar_file_read(files, fs::dir_ls(folders, glob = "*tsv"), read_tsv(file = !!.x, show_col_types = FALSE)),
+  # nested tar_map
+  tar_map(
+    values = list(funs = c("mean", "sd")),
+    tar_target(summary, summarise(files, x_sum = funs(x), y_sum = funs(y)))
+  )
+)
+mcombined <- tar_combine(mean_combine, 
+                         # tarchetypes helper to select all averages 
+                         tar_select_targets(mapped, contains("_mean_")),
+                         # .x placeholder all matching targets
+                         # !!! unquote-splice operator
+                         command = bind_rows(!!!.x, .id = "set"))
+
+scombined <- tar_combine(sd_combine, 
+                         # tarchetypes helper to select all averages 
+                         tar_select_targets(mapped, contains("_sd_")),
+                         # .x placeholder all matching targets
+                         # !!! unquote-splice operator
+                         command = bind_rows(!!!.x, .id = "set"))
+
+combi <- tar_combine(stats, mcombined, scombined)
+
+list(mapped, mcombined, scombined, combi)
+```
+
+## Corresponding DAG
+
+:::: {.columns}
+::: {.column width="65%"}
+![](img/targets_ds_full_static.png){fig-align="center"}
+:::
+::: {.column width="35%" .fragment}
+```{.r}
+> tar_read(mean_combine)
+# A tibble: 3 × 3
+  set                  x_sum y_sum
+  <chr>                <dbl> <dbl>
+1 summary_mean_circles  54.3  47.8
+2 summary_mean_lines    54.3  47.8
+3 summary_mean_others   54.3  47.8
+```
+
+And final `stat` object:
+
+```{.r}
+> tar_read(stats)
+# A tibble: 6 × 3
+  set                  x_sum y_sum
+  <chr>                <dbl> <dbl>
+1 summary_mean_circles  54.3  47.8
+2 summary_mean_lines    54.3  47.8
+3 summary_mean_others   54.3  47.8
+4 summary_sd_circles    16.7  26.9
+5 summary_sd_lines      16.7  26.9
+6 summary_sd_others     16.7  26.9
+```
+:::
+::::
+
 ## Better project design
 
 Thinking at what is a [good `targets`](https://books.ropensci.org/targets/targets.html#what-a-target-should-do) helps tremendously the coding
@@ -640,12 +754,10 @@ Thinking at what is a [good `targets`](https://books.ropensci.org/targets/target
 :::
 
 
-## Data storage
+## Data storage, `rds` is the default, but quite slow 
 
 :::: {.columns}
 ::: {.column width="50%"}
-- `rds` is the default, but quite slow 
-
 ::: {.callout-warning}
 ## Watch out
 
@@ -653,7 +765,7 @@ For malicious **promises**!
 
 :::
 
-![](https://files.mastodon.social/media_attachments/files/112/360/182/948/124/986/original/c5529d407f519690.png)
+![](https://files.mastodon.social/media_attachments/files/112/360/182/948/124/986/original/c5529d407f519690.png){height=400}
 
 
 Relevant blog post: [CVE-2024-27322 Should Never Have Been Assigned And R Data Files Are Still Super Risky Even In R 4.4.0](https://rud.is/b/2024/05/03/cve-2024-27322-should-never-have-been-assigned-and-r-data-files-are-still-super-risky-even-in-r-4-4-0/) by **Bob Rudis**
@@ -677,7 +789,7 @@ Source: [Konrad Rudolph](https://mastodon.social/@klmr/112360501388055184) about
 :::
 
 
-## Excellent possibilities for debugging
+## Excellent possibilities for debugging {.smaller}
 
 
 ::: {.incremental}
