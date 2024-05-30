@@ -422,7 +422,7 @@ Aurélien Ginolhac
     </div>
 </div>
 
-  <p class="date">Wednesday, the 29<sup style="font-size:65%;font-style:italic;">th</sup> of May, 2024</p>
+  <p class="date">Thursday, the 30<sup style="font-size:65%;font-style:italic;">th</sup> of May, 2024</p>
 </section>
 <section id="targets-and-companion-package-tarchetypes" class="slide level2">
 <h2>{targets} and companion package tarchetypes</h2>
@@ -511,7 +511,21 @@ Aurélien Ginolhac
 </div><div class="column fragment" style="width:50%;">
 <!-- -->
 <h4 id="corresponding-directed-acyclic-graph">Corresponding Directed Acyclic Graph</h4>
+<ul>
+<li><strong>Directed</strong>: each node has a one-way direction.</li>
+<li><strong>Acyclic</strong>: no loop, no ambiguity.</li>
+</ul>
 <p><img data-src="img/targets_dag_linear.png"></p>
+</div>
+</div>
+<div class="footer">
+<p>Animation code is presented as function, full code in <a href="https://github.com/ginolhac/targets-demos/blob/main/_targets_ds_1.R"><code>_targets_ds_1.R</code></a></p>
+</div>
+</section>
+<section id="manifest-a-good-companion-to-the-dag" class="slide level2">
+<h2>Manifest, a good companion to the DAG</h2>
+<p><img data-src="img/targets_dag_linear.png" height="320"></p>
+<p>Precise description of steps in a table</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href=""></a><span class="sc">&gt;</span> <span class="fu">tar_manifest</span>()</span>
 <span id="cb3-2"><a href=""></a><span class="co"># A tibble: 6 × 2</span></span>
 <span id="cb3-3"><a href=""></a>  name       command     </span>
@@ -522,11 +536,6 @@ Aurélien Ginolhac
 <span id="cb3-8"><a href=""></a><span class="dv">4</span> all_facets <span class="st">"facet_ds(ds)"</span></span>
 <span id="cb3-9"><a href=""></a><span class="dv">5</span> gif        <span class="st">"{</span><span class="sc">\n</span><span class="st">     anim_save(</span><span class="sc">\"</span><span class="st">ds.gif</span><span class="sc">\"</span><span class="st">, animation = anim, title_frame = TRUE)</span><span class="sc">\n</span><span class="st">     </span><span class="sc">\"</span><span class="st">ds.gif</span><span class="sc">\"\n</span><span class="st"> }"</span>  </span>
 <span id="cb3-10"><a href=""></a><span class="dv">6</span> report     <span class="st">"tarchetypes::tar_quarto_run(args = list(input = </span><span class="sc">\"</span><span class="st">ds1.qmd</span><span class="sc">\"</span><span class="st">, </span><span class="sc">\n</span><span class="st">     execute = TRUE,</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</div>
-<div class="footer">
-<p>Animation code is presented as function, full code in <a href="https://github.com/ginolhac/targets-demos/blob/main/_targets_ds_1.R"><code>_targets_ds_1.R</code></a></p>
-</div>
 </section>
 <section id="literate-programming" class="slide level2">
 <h2>Literate programming</h2>
