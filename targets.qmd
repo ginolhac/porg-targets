@@ -126,8 +126,31 @@ list(
 ::: {.column width="50%" .fragment}
 #### Corresponding Directed Acyclic Graph
 
+- **Directed**: each node has a one-way direction.
+- **Acyclic**: no loop, no ambiguity.
+
 ![](img/targets_dag_linear.png)
 
+
+
+
+
+:::
+::::
+
+
+
+::: {.footer}
+Animation code is presented as function, full code in [`_targets_ds_1.R`](https://github.com/ginolhac/targets-demos/blob/main/_targets_ds_1.R)
+:::
+
+
+## Manifest, a good companion to the DAG
+
+
+![](img/targets_dag_linear.png){height=320}
+
+Precise description of steps in a table
 
 ``` r
 > tar_manifest()
@@ -142,14 +165,7 @@ list(
 6 report     "tarchetypes::tar_quarto_run(args = list(input = \"ds1.qmd\", \n     execute = TRUE,
 ```
 
-:::
-::::
 
-
-
-::: {.footer}
-Animation code is presented as function, full code in [`_targets_ds_1.R`](https://github.com/ginolhac/targets-demos/blob/main/_targets_ds_1.R)
-:::
 
 
 ## Literate programming
