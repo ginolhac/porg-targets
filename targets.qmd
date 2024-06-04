@@ -26,6 +26,71 @@ dpi: 300
 ```
 
 
+## Workflow managers
+
+:::: {.columns}
+::: {.column width="60%" .incremental}
+
+- Workflow Managers are designed to compose and execute a series of computational steps.
+- Workflows are typically represented as a visual graph where nodes are connected together.
+- Workflow managers support abstractions and provide automation.
+- Scientific workflow systems enable large scale scientific experiments.
+- They make computational methods reproducible, portable, maintainable, and shareable.
+
+:::
+::: {.column width="30%"}
+![](img/static_dag.png)
+:::
+::::
+
+
+## Makefiles
+
+It started with **Makefile**, when computers power was limiting.
+Compile objects (`*.o`) only when needed: source (`*.c`) modified.
+`make` first release is April 1988.
+
+:::: {.columns}
+::: {.column width="45%"}
+Dependency rules.
+
+``` c
+target: dependencies
+      commands
+```
+
+![](img/dag_makefile.svg)
+
+:::
+::: {.column width="55%" .fragment}
+``` c
+# This is a comment line
+CC=gcc
+# CFLAGS will be the options passed to the compiler.
+CFLAGS= -c -Wall
+all: prog
+
+prog: main.o factorial.o hello.o
+    $(CC) main.o factorial.o hello.o -o prog
+
+main.o: main.c
+    $(CC) $(CFLAGS) main.c
+
+factorial.o: factorial.c
+    $(CC) $(CFLAGS) factorial.c
+
+hello.o: hello.c
+    $(CC) $(CFLAGS) hello.c
+
+clean:
+    rm -rf *.o
+```
+
+Compile with `make` (rule `all`)
+
+:::
+::::
+
 ## {targets} and companion package tarchetypes
 
 
