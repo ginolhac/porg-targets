@@ -93,7 +93,6 @@ Compile with `make` (rule `all`)
 
 ## {targets} and companion package tarchetypes
 
-
 ![](https://docs.ropensci.org/targets/reference/figures/logo.png){.absolute height="150px" top="1em" right="1em"}
 ![](https://docs.ropensci.org/tarchetypes/reference/figures/logo.png){.absolute height="150px" top="6em" right="1em"}
 
