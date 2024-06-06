@@ -2,7 +2,10 @@
 
 `{targets}`, a dependencies manager for **R**, re-run what's needed
 
-Presented at [PORG](https://porg.digitaltwin.lu/)
+Presented at 
+
+- [PORG](https://porg.digitaltwin.lu/)
+- [iscb RSG](https://www.uni.lu/life-en/social-life/student-associations-clubs/rsg/)
 
 
 
